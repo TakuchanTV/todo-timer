@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todotimer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="container">
+        <form id="form">
+            <input type="text" id="input" autocomplete="off">
+            <button id="savebtn">保存</button>
+        </form>
+    </div>
+
+    <ul id="ul"></ul>
+
+    
+    <!-- <div id="memodiv"></div> -->
+    
+    <div id="timer-Unit">
+        <div id="timer-container">
+            <button class="up">▲</button>
+            <div class="timer-text" id="hours"></div>
+            <button class="down">▼</button>
+        </div>
+
+        <div id="timer-container">
+            <button class="up">▲</button>
+            <div class="timer-text" id="minutes"></div>
+            <button class="down">▼</button>
+        </div>
+
+        <div id="timer-container">
+            <button class="up">▲</button>
+            <div class="timer-text" id="seconds"></div>
+            <button class="down">▼</button>
+        </div>
+    </div>
+
+    <div id="btncontainer">
+        <button id="start">start</button>
+        <button id="stop">stop</button>
+        <button id="reset">reset</button>
+    </div>
+
+    <script src="timer.js"></script>
+</body>
+
+</html>
