@@ -56,13 +56,6 @@ const timerElements = document.querySelectorAll(".timer-text");
 upbutton.forEach((element, index) => {
   element.addEventListener("click", () => {
     if (index === 0) {
-      // hours.textContent++ ← 数値に変換されてしまうので、00は数値0となり、0 + 1 = 1と表示されてしまう
-
-      //↓私が書いた間違えているコード
-      // hours.textContent < 10 ? "0" : "" + String(hours.textContent)
-      //  Numberに変換することで、0 + 1 = 1 としたあと、Stringにして文字にしたことで、01として表示できる。
-      // padStartは文字列でないと使えないメソッドなので、数値にして足し算した後、文字列に変換している。
-
       const hoursValue = Number(hours.textContent) + 1;
       hours.textContent = String(hoursValue).padStart(2, "0");
       count = count + one_Hours;
@@ -191,15 +184,6 @@ startBtn.addEventListener("click", () => {
       // saveText();
       console.log(todos);
 
-      // todos.forEach((element, index) => {
-      //   if (index === 0) {
-      //     alert(todos[0]);
-      //     todos.shift();
-      //     localStorage.setItem("todos", JSON.stringify(todos));
-      //     console.log(todos);
-      //   }
-      // });
-
       startBtn.disabled = true;
       stopBtn.disabled = true;
       resetBtn.disabled = true;
@@ -236,7 +220,6 @@ resetBtn.addEventListener("click", () => {
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-  // let text = input.value;
   addText();
 });
 
@@ -294,19 +277,6 @@ if (todos) {
   });
 }
 
-//画面に表示されているタスクをドラッグアンドドロップで順番を入れ替えるコード
-// const li = ul.children;
-// const lists = [...li];
-// lists.forEach((element, index) => {
-//   element.id = `${index}`;
-//   element.draggable = true;
-//   element.addEventListener("dragstart", onDragStart);
-//   element.addEventListener("drop", onDrop);
-//   element.addEventListener("dragover", onDragover);
-//   element.addEventListener("dragenter", onDragenter);
-//   element.addEventListener("dragleave", onDragleave);
-// });
-
 function setupDragEvents(li) {
   li.id = crypto.randomUUID();
 
@@ -319,23 +289,10 @@ function setupDragEvents(li) {
 }
 
 function onDragStart(event) {
-  // event.dataTransfer.setData("text", event.currentTarget.id);
   event.dataTransfer.setData("text", event.currentTarget.id);
 }
 
 function onDrop(event) {
-  // event.preventDefault();
-
-  // const draggedId = event.dataTransfer.getData("text");
-
-  // const draggedElement = document.getElementById(draggedId);
-
-  // event.currentTarget.after(draggedElement);
-
-  // event.currentTarget.classList.remove("dragging");
-
-  // saveText();
-
   event.preventDefault();
 
   // ドラッグ中のliのidを取得
@@ -387,21 +344,3 @@ function onDragleave(event) {
 function onDragover(event) {
   event.preventDefault();
 }
-
-// const saveText = () => {
-//     const li = document.querySelectorAll("li")
-//     li.forEach((element) => {
-//         const todo = element.innerHTML
-//todoはforEachで繰り返し処理されているので、test→test,test2→test,test2,test3と増えていく。
-
-//         console.log(todo);
-
-//         const array = []
-//         const todos = localStorage.setItem("todos",JSON.stringify(todo))
-//         array.push(todos)
-//todosはundifindedになる。なぜならforEachの返り値はないから。←これは誤り
-//正しくはlocalStorage.setItem()は保存が目的なので、そもそも返り値はない
-//この書き方はforEach→setItem→forEach→setItemと、ループと保存を繰り返しているので、
-// 最終的には最後に更新された要素しか残らない
-//     })
-// }
