@@ -253,6 +253,7 @@ const addText = (todo) => {
 
   if (todoText) {
     const li = document.createElement("li");
+    setupDragEvents(li);
     const span = document.createElement("span");
     span.textContent = todoText;
     const btn = document.createElement("button");
@@ -269,6 +270,7 @@ const addText = (todo) => {
     li.appendChild(span);
     ul.appendChild(li);
     li.appendChild(btn);
+    li.draggable = true;
     input.value = "";
     console.log(todos);
     saveText();
@@ -290,6 +292,100 @@ if (todos) {
   todos.forEach((todo) => {
     addText(todo);
   });
+}
+
+//画面に表示されているタスクをドラッグアンドドロップで順番を入れ替えるコード
+// const li = ul.children;
+// const lists = [...li];
+// lists.forEach((element, index) => {
+//   element.id = `${index}`;
+//   element.draggable = true;
+//   element.addEventListener("dragstart", onDragStart);
+//   element.addEventListener("drop", onDrop);
+//   element.addEventListener("dragover", onDragover);
+//   element.addEventListener("dragenter", onDragenter);
+//   element.addEventListener("dragleave", onDragleave);
+// });
+
+function setupDragEvents(li) {
+  li.id = crypto.randomUUID();
+
+  li.draggable = true;
+  li.addEventListener("dragstart", onDragStart);
+  li.addEventListener("drop", onDrop);
+  li.addEventListener("dragover", onDragover);
+  li.addEventListener("dragenter", onDragenter);
+  li.addEventListener("dragleave", onDragleave);
+}
+
+function onDragStart(event) {
+  // event.dataTransfer.setData("text", event.currentTarget.id);
+  event.dataTransfer.setData("text", event.currentTarget.id);
+}
+
+function onDrop(event) {
+  // event.preventDefault();
+
+  // const draggedId = event.dataTransfer.getData("text");
+
+  // const draggedElement = document.getElementById(draggedId);
+
+  // event.currentTarget.after(draggedElement);
+
+  // event.currentTarget.classList.remove("dragging");
+
+  // saveText();
+
+  event.preventDefault();
+
+  // ドラッグ中のliのidを取得
+  const draggedId = event.dataTransfer.getData("text");
+
+  // ドラッグ中のli要素を取得
+  const draggedElement = document.getElementById(draggedId);
+
+  // ドロップ先のli要素
+  const targetElement = event.currentTarget;
+
+  // 自分自身にドロップした場合は何もしない
+  if (draggedElement === targetElement) {
+    return;
+  }
+
+  // ドロップ先の位置情報
+  const rect = targetElement.getBoundingClientRect();
+
+  // liの中心位置
+  const middleY = rect.top + rect.height / 2;
+
+  // マウスカーソルのY座標
+  const mouseY = event.clientY;
+
+  // 上半分なら前に挿入
+  if (mouseY < middleY) {
+    targetElement.before(draggedElement);
+  }
+  // 下半分なら後ろに挿入
+  else {
+    targetElement.after(draggedElement);
+  }
+
+  targetElement.classList.remove("dragging");
+
+  // 並び順を保存
+  saveText();
+}
+
+function onDragenter(event) {
+  event.currentTarget.classList.add("dragging");
+}
+
+function onDragleave(event) {
+  event.currentTarget.classList.remove("dragging");
+}
+
+function onDragover(event) {
+  event.preventDefault();
 }
 
 // const saveText = () => {
