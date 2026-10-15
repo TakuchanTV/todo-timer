@@ -92,7 +92,10 @@
 }
 
 #ul li {
-  list-style-position: inside;
+  /* list-style-position: inside; */
+  list-style: none;
+  background-color: beige;
+  border: 1px solid black;
 }
 
 #ul button {
@@ -114,4 +117,13 @@
 #savebtn {
   border-radius: 20px;
   transform: translateX(10px);
+}
+
+.drag {
+  background-color: skyblue;
+}
+
+.dragging {
+  background-color: skyblue;
+  opacity: 0.5;
 }

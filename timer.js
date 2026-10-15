@@ -56,13 +56,6 @@ const timerElements = document.querySelectorAll(".timer-text");
 upbutton.forEach((element, index) => {
   element.addEventListener("click", () => {
     if (index === 0) {
-      // hours.textContent++ ← 数値に変換されてしまうので、00は数値0となり、0 + 1 = 1と表示されてしまう
-
-      //↓私が書いた間違えているコード
-      // hours.textContent < 10 ? "0" : "" + String(hours.textContent)
-      //  Numberに変換することで、0 + 1 = 1 としたあと、Stringにして文字にしたことで、01として表示できる。
-      // padStartは文字列でないと使えないメソッドなので、数値にして足し算した後、文字列に変換している。
-
       const hoursValue = Number(hours.textContent) + 1;
       hours.textContent = String(hoursValue).padStart(2, "0");
       count = count + one_Hours;
@@ -191,15 +184,6 @@ startBtn.addEventListener("click", () => {
       // saveText();
       console.log(todos);
 
-      // todos.forEach((element, index) => {
-      //   if (index === 0) {
-      //     alert(todos[0]);
-      //     todos.shift();
-      //     localStorage.setItem("todos", JSON.stringify(todos));
-      //     console.log(todos);
-      //   }
-      // });
-
       startBtn.disabled = true;
       stopBtn.disabled = true;
       resetBtn.disabled = true;
@@ -236,7 +220,6 @@ resetBtn.addEventListener("click", () => {
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-  // let text = input.value;
   addText();
 });
 
@@ -253,6 +236,7 @@ const addText = (todo) => {
 
   if (todoText) {
     const li = document.createElement("li");
+    setupDragEvents(li);
     const span = document.createElement("span");
     span.textContent = todoText;
     const btn = document.createElement("button");
@@ -269,6 +253,7 @@ const addText = (todo) => {
     li.appendChild(span);
     ul.appendChild(li);
     li.appendChild(btn);
+    li.draggable = true;
     input.value = "";
     console.log(todos);
     saveText();
@@ -292,20 +277,70 @@ if (todos) {
   });
 }
 
-// const saveText = () => {
-//     const li = document.querySelectorAll("li")
-//     li.forEach((element) => {
-//         const todo = element.innerHTML
-//todoはforEachで繰り返し処理されているので、test→test,test2→test,test2,test3と増えていく。
+function setupDragEvents(li) {
+  li.id = crypto.randomUUID();
 
-//         console.log(todo);
+  li.draggable = true;
+  li.addEventListener("dragstart", onDragStart);
+  li.addEventListener("drop", onDrop);
+  li.addEventListener("dragover", onDragover);
+  li.addEventListener("dragenter", onDragenter);
+  li.addEventListener("dragleave", onDragleave);
+}
 
-//         const array = []
-//         const todos = localStorage.setItem("todos",JSON.stringify(todo))
-//         array.push(todos)
-//todosはundifindedになる。なぜならforEachの返り値はないから。←これは誤り
-//正しくはlocalStorage.setItem()は保存が目的なので、そもそも返り値はない
-//この書き方はforEach→setItem→forEach→setItemと、ループと保存を繰り返しているので、
-// 最終的には最後に更新された要素しか残らない
-//     })
-// }
+function onDragStart(event) {
+  event.dataTransfer.setData("text", event.currentTarget.id);
+}
+
+function onDrop(event) {
+  event.preventDefault();
+
+  // ドラッグ中のliのidを取得
+  const draggedId = event.dataTransfer.getData("text");
+
+  // ドラッグ中のli要素を取得
+  const draggedElement = document.getElementById(draggedId);
+
+  // ドロップ先のli要素
+  const targetElement = event.currentTarget;
+
+  // 自分自身にドロップした場合は何もしない
+  if (draggedElement === targetElement) {
+    return;
+  }
+
+  // ドロップ先の位置情報
+  const rect = targetElement.getBoundingClientRect();
+
+  // liの中心位置
+  const middleY = rect.top + rect.height / 2;
+
+  // マウスカーソルのY座標
+  const mouseY = event.clientY;
+
+  // 上半分なら前に挿入
+  if (mouseY < middleY) {
+    targetElement.before(draggedElement);
+  }
+  // 下半分なら後ろに挿入
+  else {
+    targetElement.after(draggedElement);
+  }
+
+  targetElement.classList.remove("dragging");
+
+  // 並び順を保存
+  saveText();
+}
+
+function onDragenter(event) {
+  event.currentTarget.classList.add("dragging");
+}
+
+function onDragleave(event) {
+  event.currentTarget.classList.remove("dragging");
+}
+
+function onDragover(event) {
+  event.preventDefault();
+}
