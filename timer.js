@@ -29,6 +29,8 @@ const hours = document.getElementById("hours");
 const minutes = document.getElementById("minutes");
 const seconds = document.getElementById("seconds");
 
+const audio = new Audio("TimerAudio.mp3");
+
 let count = Number(
   hours.textContent + minutes.textContent + seconds.textContent,
 );
@@ -48,7 +50,7 @@ if (
 ) {
   startBtn.disabled = true;
   stopBtn.disabled = true;
-  resetBtn.disabled = true;
+  // resetBtn.disabled = true;
 }
 
 const timerElements = document.querySelectorAll(".timer-text");
@@ -174,19 +176,20 @@ startBtn.addEventListener("click", () => {
       console.log(todos);
 
       if (todos.length > 0) {
+        audio.loop = true;
+        audio.play();
         alert(todos[0]);
         todos.shift();
         localStorage.setItem("todos", JSON.stringify(todos));
-        location.reload();
+        // audio.pause();
       } else {
-        console.log(false);
+        audio.loop = true;
+        audio.play();
       }
-      // saveText();
-      console.log(todos);
 
       startBtn.disabled = true;
       stopBtn.disabled = true;
-      resetBtn.disabled = true;
+      // resetBtn.disabled = true;
       hours.textContent = "00";
       minutes.textContent = "00";
       seconds.textContent = "00";
@@ -208,7 +211,7 @@ stopBtn.addEventListener("click", () => {
 });
 
 resetBtn.addEventListener("click", () => {
-  resetBtn.disabled = true;
+  // resetBtn.disabled = true;
   startBtn.disabled = true;
   stopBtn.disabled = true;
   hours.textContent = "00";
@@ -216,6 +219,7 @@ resetBtn.addEventListener("click", () => {
   seconds.textContent = "00";
   clearInterval(timerId);
   count = 0;
+  audio.pause();
 });
 
 form.addEventListener("submit", (e) => {
